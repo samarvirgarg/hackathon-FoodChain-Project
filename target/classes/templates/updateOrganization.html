@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Organization List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/new-style.css}" />
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{/js/jquery-1.12.4.min.js}" ></script>
+</head>
+<body class="new-layout roboto-regular">
+<div class="container-custom">
+<!--    <div class="sidebar side-collapsed">
+        <span class="toggle-sidebar"><i class="fa fa-caret-left"></i></span>
+        <div class="sidebar-inner">
+            <div class="logo-wrapper">
+                <a th:href="@{/}">MSS</a>
+            </div>
+        </div>
+    </div>-->
+    <div class="main-content full-width">
+        <div class="header-nav">
+            <ul class="navigation-list">
+                <li><a href="#" th:href="@{/organization/}"><i class="fa fa-building"></i><span>Organizations</span></a></li>
+                <li><a href="#" th:href="@{/users}"><i class="fa fa-users"></i><span>Users</span></a></li>
+                <li><a href="#" th:href="@{/skill/}"> <i class="fa fa-cogs"></i><span>Skills</span></a></li>
+            </ul>
+            <ul class="navigation-list">
+                <li><a href="#" th:href="@{/logout}"><i class="fa fa-sign-out"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+        <div class="main-content-inner">
+            <div class="content">
+                <form class="organisation-register-form" action="#" th:action="@{/organization/saveOrganization}" th:object="${organization}" method="POST">
+                    <!-- Add hidden form field to handle update -->
+                    <input type="hidden" th:field="*{orgId}" />
+                    <div class="form-group">
+                        <label class="control-label" for="name"> Name </label>
+                        <input id="name" type="text" th:field="*{name}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="email"> Email </label>
+                        <input id="email" type="text" th:field="*{email}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="address"> Address </label>
+                        <input id="address" type="text" th:field="*{address}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="city"> City </label>
+                        <input id="city" type="text" th:field="*{city}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="state"> State </label>
+                        <input id="state" type="text" th:field="*{state}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="contact"> Contact </label>
+                        <input id="contact" type="text" th:field="*{contact}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="contact"> About </label>
+                        <textarea id="about" type="text" th:field="*{about}" class="form-control mb-4 col-4" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="type">Organization Type</label>
+
+                        <select class="form-control" id="type" th:field="*{type}">
+                            <option value="" selected>Select Organization Type</option>
+                            <option th:each="orgType : ${organizationTypes}" th:value="${orgType}" th:text="${orgType}"></option>
+                        </select>
+                    </div>
+                    <label class="control-label" for="skills"> Skills </label>
+                    <select  class="form-control" multiple="multiple" id="skills" th:field="*{skills}">
+                        <option th:each="skill : ${skills}" th:value="${skill}" th:text="${skill.name}" th:selected="${selectedSkillIds.contains(skill.name)}"></option>
+                    </select><b/>
+                    <div class="form-group">
+                        <button type="submit" class="save-form-data-button">Update Organization</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+<!-- toggle sidebar -->
+        $('.toggle-sidebar').on('click', function(){
+            $('.new-layout .sidebar').toggleClass('side-collapsed')
+        })
+
+<!--  toggle sidebar filters -->
+        $('.new-layout form .form-group-custom > span > label').on('click', function(){
+            $(this).parent().siblings('div').toggleClass('hidden')
+        })
+
+<!--    uncheck all checkbox under clicked filter section    -->
+        $('sup').on('click', function(){
+            $(this).parent().parent().find('input[type="checkbox"]').each(function(){
+                $(this).prop('checked', false);
+                $(this).attr('checked', false);
+            })
+        })
+    })
+</script>
+</body>
+</html>

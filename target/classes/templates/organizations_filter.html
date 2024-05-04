@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Organization List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/new-style.css}" />
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{/js/jquery-1.12.4.min.js}" ></script>
+</head>
+<body class="new-layout roboto-regular">
+<div class="container-custom">
+    <div class="sidebar">
+        <span class="toggle-sidebar"><i class="fa fa-caret-left"></i></span>
+        <div class="sidebar-inner">
+            <div class="logo-wrapper">
+                <a th:href="@{/}">MSS</a>
+            </div>
+            <form th:action="@{/organization/search-filter}" method="GET">
+                <div class="form-group">
+                    <input type="text" class="form-control search-box" name="skillsSearch" placeholder="Search..." th:value="${param.skillsSearch}">
+                </div>
+                <!--state filter start-->
+                <div class="form-group-custom">
+                <span>
+                    <label>State</label>
+                    <sup>clear</sup>
+                </span>
+                    <div class="filter-wrapper " >
+                        <div th:each="state : ${states}">
+                            <input type="checkbox" id="state" name="state" th:value="${state}" th:checked="${selectedStates.contains(state)}">
+                            <label th:for="'state_' + ${state}" th:text="${state}" class="roboto-regular"></label>
+                        </div>
+                    </div>
+                </div>
+                <!--state filter end-->
+                <!-- city filter start-->
+                <div class="form-group-custom">
+               <span>
+                    <label>City</label>
+                    <sup>clear</sup>
+                </span>
+                    <div class="filter-wrapper " >
+                        <div th:each="city : ${cities}">
+                            <input type="checkbox" id="city" name="city" th:value="${city}" th:checked="${selectedCities.contains(city)}">
+                            <label th:for="'city_' + ${city}" th:text="${city}" class="roboto-regular"></label>
+                        </div>
+                    </div>
+                </div>
+                <!--type filter start-->
+                <div class="form-group-custom">
+                <span>
+                    <label>Type</label>
+                    <sup>clear</sup>
+                </span>
+                    <div class="filter-wrapper " >
+                        <div th:each="typeItem : ${types}">
+                            <input type="checkbox" id="type_${typeItem}" name="type" th:value="${typeItem}" th:checked="${selectedTypes != null and selectedTypes.contains(typeItem)}">
+                            <label th:for="'type_' + ${typeItem}" th:text="${typeItem}" class="roboto-regular"></label>
+                        </div>
+                    </div>
+                </div>
+                <!--type filter end-->
+                <!-- Skills filter start -->
+                <div class="form-group-custom">
+                <span>
+                    <label>Skills</label>
+                    <sup>clear</sup>
+                </span>
+                    <div class="filter-wrapper " >
+                        <div th:each="skill : ${skills}">
+                            <input type="checkbox" id="skill_${skill.skillId}" name="skills" th:value="${skill.name}" th:checked="${selectedSkills != null and selectedSkills.contains(skill.name)}">
+                            <label th:for="'skill_' + ${skill.skillId}" th:text="${skill.name}" class="roboto-regular"></label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Skills filter end -->
+
+                <button type="submit" id="BUTTON_1">
+                    <span id="SPAN_2">Apply filters</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="header-nav">
+            <ul class="navigation-list">
+                <li><a href="#" th:href="@{/organization/}"><i class="fa fa-building"></i><span>Organizations</span></a></li>
+                <li><a href="#" th:href="@{/users}"><i class="fa fa-users"></i><span>Users</span></a></li>
+                <li><a href="#" th:href="@{/skill/}"> <i class="fa fa-cogs"></i><span>Skills</span></a></li>
+            </ul>
+            <ul class="navigation-list">
+                <li><a href="#" th:href="@{/logout}"><i class="fa fa-sign-out"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+        <div class="main-content-inner">
+            <h1>Organization List</h1>
+            <div class="content">
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Organization Name</th>
+                        <th scope="col">Organization Email</th>
+                        <th scope="col">Organization City</th>
+                        <th scope="col">Organization State </th>
+                        <th scope="col">Organization Contact </th>
+                        <th scope="col">Organization Skill </th>
+                        <th scope="col">Organization Type </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr th:each="organization : ${organizations}">
+                        <td th:text="${organization.name}"></td>
+                        <td th:text="${organization.email}"></td>
+                        <td th:text="${organization.city}"></td>
+                        <td th:text="${organization.state}"></td>
+                        <td th:text="${organization.contact}"></td>
+                        <!-- Displaying skill information -->
+                        <td>
+                            <span th:each="skill : ${organization.skills}" th:text="${skill.name} + ', '"></span>
+                        </td>
+                        <td th:text="${organization.type}"></td>
+                    </tr>
+                    <tr th:if="${organizations.size() < 1}">
+                        <td colspan="7" class="no-record">No Record Found</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+<!-- toggle sidebar -->
+        $('.toggle-sidebar').on('click', function(){
+            $('.new-layout .sidebar').toggleClass('side-collapsed')
+        })
+
+<!--  toggle sidebar filters -->
+        $('.new-layout form .form-group-custom > span > label').on('click', function(){
+            $(this).parent().siblings('div').toggleClass('hidden')
+        })
+
+<!--    uncheck all checkbox under clicked filter section    -->
+        $('sup').on('click', function(){
+            $(this).parent().parent().find('input[type="checkbox"]').each(function(){
+                $(this).prop('checked', false);
+                $(this).attr('checked', false);
+            })
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Organization List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/new-style.css}" />
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script th:src="@{/js/jquery-1.12.4.min.js}" ></script>
+</head>
+<body class="new-layout roboto-regular">
+<div class="container-custom">
+  <!--  <div class="sidebar side-collapsed">
+        <span class="toggle-sidebar"><i class="fa fa-caret-left"></i></span>
+        <div class="sidebar-inner">
+            <div class="logo-wrapper">
+                <a th:href="@{/}">MSS</a>
+            </div>
+        </div>
+    </div>-->
+    <div class="main-content full-width">
+        <div class="header-nav">
+            <ul class="navigation-list">
+                <li><a href="#" th:href="@{/organization/}"><i class="fa fa-building"></i><span>Organizations</span></a></li>
+                <li><a href="#" th:href="@{/users}"><i class="fa fa-users"></i><span>Users</span></a></li>
+                <li><a href="#" th:href="@{/skill/}"> <i class="fa fa-cogs"></i><span>Skills</span></a></li>
+            </ul>
+            <ul class="navigation-list">
+                <li><a href="#" th:href="@{/logout}"><i class="fa fa-sign-out"></i><span>Logout</span></a></li>
+            </ul>
+        </div>
+        <div class="main-content-inner">
+            <div class="content">
+                <form class="user-registration-form" action="#" th:action="@{/registration/saveUser}" th:object="${user}" method="POST">
+                    <!-- Add hidden form field to handle update -->
+                    <input type="hidden" th:field="*{userId}" />
+                    <input type="hidden" th:field="*{role}" />
+                    <div class="form-group">
+                        <label class="control-label" for="firstName"> First Name </label>
+                        <input id="firstName" type="text" th:field="*{firstName}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="lastName"> Last Name </label>
+                        <input id="lastName" type="text" th:field="*{lastName}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="email"> Email </label>
+                        <input id="email" type="text" th:field="*{email}" class="form-control mb-4 col-4">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="save-form-data-button">Update Users</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+  <!-- toggle sidebar -->
+        $('.toggle-sidebar').on('click', function(){
+            $('.new-layout .sidebar').toggleClass('side-collapsed')
+        })
+
+  <!--  toggle sidebar filters -->
+        $('.new-layout form .form-group-custom > span > label').on('click', function(){
+            $(this).parent().siblings('div').toggleClass('hidden')
+        })
+
+  <!--    uncheck all checkbox under clicked filter section    -->
+        $('sup').on('click', function(){
+            $(this).parent().parent().find('input[type="checkbox"]').each(function(){
+                $(this).prop('checked', false);
+                $(this).attr('checked', false);
+            })
+        })
+    })
+</script>
+</body>
+</html>

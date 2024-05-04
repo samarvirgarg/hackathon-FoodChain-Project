@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Login</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+	<link rel="stylesheet"
+		  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="form-wrapper">
+	<div class="login-pannel-left">
+		<div class="heading">Login</div>
+		<div class="paragraph">By logging in you agree to the terms and contitions</div>
+
+	</div>
+	<div class="login-form-wrapper">
+		<form th:action="@{/login}" method="post" autocomplete="off">
+			<input autocomplete="false" name="hidden" type="text" style="display:none;">
+
+			<!-- error message -->
+			<div th:if="${param.error}">
+				<div class="alert alert-danger">Invalid username or
+					password.
+				</div>
+			</div>
+			<!-- logout message -->
+			<div th:if="${param.logout}">
+				<div class="alert alert-info">You have been logged out.</div>
+			</div>
+			<div class="form-group">
+				<label for="username"> Username </label>
+				<input type="text" class="form-control" name="username" autofocus="autofocus"
+				>
+			</div>
+			<div class="form-group">
+				<label for="password">Password</label>
+				<input type="password" name="password" class="form-control" autocomplete="new-password" list="autocompleteOff"
+				/>
+			</div>
+			<div class="form-group">
+				<div class="" style="margin-top: 4rem;">
+					<div class="">
+						<input type="submit" name="login-submit" id="login-submit"
+							   class="form-control btn btn-primary" value="Login" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</body>
+</html>

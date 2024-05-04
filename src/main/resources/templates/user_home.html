@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Search Kitchens</title>
+    <style>
+        .menu {
+            display: none;
+        }
+        .menu.active {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link th:href="@{/css/magicsuggest.css}" rel="stylesheet" type="text/css">
+    <script th:src="@{/js/jquery-1.12.4.min.js}" ></script>
+    <script th:src="@{/js/magicsuggest.js}"></script>
+</head>
+
+<body>
+<div class="main-content-user-wrapper">
+
+    <div class="main-content-user">
+        <div class="action">
+            <div class="profile" onclick="menuToggle();">
+                <img src="/image/profile-logo.png" />
+            </div>
+            <div class="menu" onclick="menuToggle();">
+                <h3 id="userData" ></h3>
+                <ul>
+                    <li>
+                        <img src="/image/log-out.png" /><a href="#" th:href="@{/logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="navbar_top" class="container-custom">
+            <div id="ms1" class="form-control"></div>
+            <form id="searchform" class="hidden" th:action="@{/registration/userFilter}" th:object="${organizationSearch}" method="GET">
+                <input  type="hidden" id="skillsSearch" name="skillsSearch" />
+                <!--state filter start-->
+
+                <!--state filter end-->
+
+                <!-- city filter start-->
+                <div class="form-group-custom">
+               <span>
+                    <label>City</label>
+                    <sup>clear</sup>
+                </span>
+                    <div class="filter-wrapper " >
+                        <div th:each="city : ${cities}">
+                            <input type="checkbox" id="city" name="city" th:value="${city}" th:checked="${selectedCities.contains(city)}">
+                            <label th:for="'city_' + ${city}" th:text="${city}" class="roboto-regular"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!--type filter start-->
+                <div class="form-group-custom">
+                <span>
+                    <label>Type</label>
+                    <sup>clear</sup>
+                </span>
+                    <div class="filter-wrapper " >
+                        <div th:each="typeItem : ${types}">
+                            <input type="checkbox" id="type_${typeItem}" name="type" th:value="${typeItem}" th:checked="${selectedTypes != null and selectedTypes.contains(typeItem)}">
+                            <label th:for="'type_' + ${typeItem}" th:text="${typeItem}" class="roboto-regular"></label>
+                        </div>
+                    </div>
+                </div>
+                <!--type filter end-->
+
+                <!-- Options filter start -->
+                <div class="form-group-custom">
+                <span>
+                    <label>Options</label>
+                    <sup>clear</sup>
+                </span>
+                    <div class="filter-wrapper " >
+                        <div th:each="skill : ${skills}">
+                            <input type="checkbox" id="skill_${skill.skillId}" name="skills" th:value="${skill.name}" th:checked="${selectedSkills != null and selectedSkills.contains(skill.name)}">
+                            <label th:for="'skill_' + ${skill.skillId}" th:text="${skill.name}" class="roboto-regular"></label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Options filter end -->
+                <input  type="submit" id="submit-search" value="Apply"/>
+            </form>
+            <div class="get-item" >Search</div>
+            <span class="user-search-filters"><i class="fa fa-filter"></i></span>
+        </div>
+        <div class="logo-section"><a href="#" th:href="@{/}">FoodChain</a></div>
+    </div>
+
+    <div class="row custom-results-row">
+        <div class="search-content" >
+            <div th:each="organization,iter : ${organizations}" class="glassmorphic" >
+                <div th:class="${iter.index}">
+                    <h3 th:text="${organization.name}" class="gradient-text"></h3>
+                    <span th:each="skill : ${organization.skills.![name]}" th:text="${skill}">
+                        </span>
+                </div>
+
+                <script src="https://cdn.botpress.cloud/webchat/v1/inject.js"></script>
+                <script src="https://mediafiles.botpress.cloud/6e9d3a6a-4b7b-4447-bda1-e77239d2a4ab/webchat/config.js" defer></script>
+
+                <!--                    detailed section -->
+
+                <div class="search-content-detail hidden">
+                    <table class="table">
+                        <tbody>
+                        <tr>
+                            <th scope="row">About</th>
+                            <td th:text="${organization.about}"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Address</th>
+                            <td th:text="${organization.address}"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">City</th>
+                            <td th:text="${organization.city}"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">State</th>
+                            <td th:text="${organization.state}"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Contact</th>
+                            <td th:text="${organization.contact}"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email</th>
+                            <td th:text="${organization.email}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--  detailed section end -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+window.addEventListener('scroll', function() {
+  if (window.scrollY > 50) {
+    document.getElementById('navbar_top').classList.add('fixed-top');
+    // add padding top to show content behind navbar
+    navbar_height = document.querySelector('.container-custom').offsetHeight;
+    document.body.style.paddingTop = navbar_height + 'px';
+  } else {
+    document.getElementById('navbar_top').classList.remove('fixed-top');
+     // remove padding top from body
+    document.body.style.paddingTop = '0';
+  }
+});
+});
+$( document ).ready(function() {
+
+if( window.location.pathname == '/') $("#submit-search").click()
+
+$('#searchform .form-group-custom > span > label').on('click', function(){
+    $(this).parent().siblings('div').toggleClass('hidden')
+})
+
+$('span.user-search-filters').on('click', function(){
+            $('#searchform').toggleClass('hidden')
+})
+
+$('sup').on('click', function(){
+    $(this).parent().parent().find('input[type="checkbox"]').each(function(){
+        $(this).prop('checked', false);
+        $(this).attr('checked', false);
+    })
+})
+
+<!--const search_content_number = document.getElementsByClassName("search-content")[0].childNodes.length;-->
+<!--    if(search_content_number > 1){-->
+<!--        $('.main-content-user').removeClass('blank-page')-->
+<!--    }-->
+$("h3").on('click', function(){
+   $('.search-content-detail').addClass('hidden');
+    $(this).parent().siblings().removeClass('hidden');
+})
+
+    let search_array = [];
+    $('.get-item').click(function() {
+        $('.ms-sel-item').each(function(e){
+          search_array.push($(this).text());
+          if($('.ms-sel-item').length - 1 == e){
+            let search_array_string = search_array.join(",")
+                $("#skillsSearch").val(search_array_string)
+
+            }
+        })
+        $("#submit-search").click()
+    });
+
+$(function() {
+        const skills_data = $.get("http://localhost:8080/all", function(data, status){
+        var ms1 = $('#ms1').magicSuggest({
+              data: data,
+              hideTrigger: false,
+              placeholder: "Enter Skills or Organization to begin search..."
+            })
+    });
+            const userDataApi = $.get("http://localhost:8080/profile", function(data, status){
+        var userData = data
+        document.getElementById("userData").innerHTML = `${userData.firstName + " " + userData.lastName}`;
+    });
+    });
+});
+</script>
+<script>
+    function menuToggle() {
+      const toggleMenu = document.querySelector(".menu");
+      toggleMenu.classList.toggle("active");
+    }
+    document.addEventListener('click', function(event) {
+        const menu = document.querySelector('.menu');
+        const profile = document.querySelector('.profile');
+        if (!menu.contains(event.target) && !profile.contains(event.target)) {
+            menu.classList.remove('active');
+        }
+    });
+</script>
+</body>
+</html>
